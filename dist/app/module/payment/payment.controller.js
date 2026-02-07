@@ -402,6 +402,17 @@ const revenueCatWebhook = async (req, res) => {
                     await (0, sendNotification_1.sendNotification)(user._id.toString(), "🔄 Subscription Renewed", "Your subscription has been renewed successfully.");
                 }
                 break;
+            case "RESTORE":
+                paymentStatus = payment_model_1.EPaymentStatus.PAID;
+                paymentType = product_id;
+                user.subscriptionExpireDate = subExpireDate;
+                user.username = displayName || user.username;
+                user.email = email || user.email;
+                await user.save();
+                if (user.fcmToken) {
+                    await (0, sendNotification_1.sendNotification)(user._id.toString(), "🔄 Subscription Restored", "Your previous subscription has been restored successfully.");
+                }
+                break;
             case "CANCELLATION":
                 paymentStatus = payment_model_1.EPaymentStatus.CANCEL;
                 break;
